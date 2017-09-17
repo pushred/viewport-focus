@@ -7,6 +7,8 @@ const DEMO_URL = `${HOST}:${PORT}/demo.html`;
 const W = 300;
 const H = 600;
 const M = 16;
+const Q = H / 4;
+const T = Q;
 
 beforeAll(() => {
   return new Promise(resolve => {
@@ -34,13 +36,21 @@ test('last element is returned when at bottom of viewport', () => {
 });
 
 test('element passing under the viewport center is returned', () => {
-  const CENTER = (H / 4) + (M * 2);
-
   return Nightmare()
     .goto(DEMO_URL)
     .viewport(W, H)
-    .scrollTo(CENTER, 0)
+    .scrollTo(Q * 1.1, 0)
     .evaluate(() => window.closestEl)
     .end()
     .then(closestEl => expect(closestEl).not.toBeNull() && expect(closestEl.id).toEqual('2'));
+});
+
+test('element target can be offset to middle', () => {
+  return Nightmare()
+    .goto(DEMO_URL + '?offset=middle')
+    .viewport(W, H)
+    .scrollTo(T + (Q * 3.5) + M, 0)
+    .evaluate(() => window.closestEl)
+    .end()
+    .then(closestEl => expect(closestEl).not.toBeNull() && expect(closestEl.id).toEqual('3'));
 });

@@ -3,8 +3,7 @@
 <head>
   <style>
     body {
-      margin: 1em;
-      padding: 0;
+      margin: 25vh 1em 1em 1em;
     }
 
     body:after {
@@ -37,15 +36,18 @@
     }
 
     section:nth-child(3) {
+      height: 25vh;
+      line-height: 25vh;
       color: #469962;
       background-color: #E8F2F0;
     }
 
     section:nth-child(4) {
+      height: 100vh;
+      line-height: 100vh;
       color: #9A4847;
       background-color: #F2EDE8;
     }
-
   </style>
 </head>
 <body>
@@ -57,9 +59,10 @@
   <script src="/dist/closest-to-viewport-center.js"></script>
   <script>
     var elements = [].slice.call(document.querySelectorAll('section'));
+    var offset = window.location.search.split('offset=')[1];
 
     function getClosestEl() {
-      window.closestEl = window.closestToViewportCenter(elements);
+      window.closestEl = window.closestToViewportCenter(elements, offset);
       elements.forEach(el => el.style.backgroundColor = '');
       window.closestEl.style.backgroundColor = '#FFFFFF';
     }

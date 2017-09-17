@@ -17,8 +17,9 @@
     value: true
   });
   exports.default = getClosestToViewportCenter;
-  function getClosestToViewportCenter(elements) {
-    var offsets = {};
+  function getClosestToViewportCenter(elements, offset) {
+    var isCenterOffset = offset && /center|middle/.test(offset);
+
     var midY = window.scrollY + window.innerHeight / 2;
 
     var isTop = window.scrollY === 0;
@@ -30,15 +31,28 @@
       return elements.slice(-1)[0];
     }
 
-    elements.forEach(function (el, index) {
+    var offsets = elements.reduce(function (offsets, el, index) {
       var rect = el.getBoundingClientRect();
-      var elTop = Math.abs(rect.top);
-      var elMiddle = Math.abs(rect.height / 2);
-      var distance = Math.abs(midY - (window.scrollY + elTop + elMiddle));
-      offsets[distance] = index;
-    });
+      var elTop = Math.abs(window.scrollY + rect.top);
+      var elOffset = void 0;
 
-    var index = Object.keys(offsets).sort()[0];
+      if (isCenterOffset) elOffset = Math.abs(rect.height / 2);
+      if (!offset) elOffset = rect.height;
+
+      var distance = Math.abs(midY - (elTop + elOffset));
+      offsets[distance] = index;
+
+      if (elOffset === rect.height) {
+        var topDistance = Math.abs(midY - elTop);
+        offsets[topDistance] = index;
+      }
+
+      return offsets;
+    }, {});
+
+    var index = Object.keys(offsets).sort(function (a, b) {
+      return parseFloat(a) - parseFloat(b);
+    })[0];
     var elIndex = offsets[index];
 
     return elements[elIndex];

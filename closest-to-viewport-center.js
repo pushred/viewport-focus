@@ -1,9 +1,10 @@
-export default function getClosestToViewportCenter (elements) {
-  const offsets = {};
+export default function getClosestToViewportCenter (elements, offset) {
+  const isCenterOffset = offset && /center|middle/.test(offset);
+
   const midY = window.scrollY + (window.innerHeight / 2);
 
   const isTop = window.scrollY === 0;
-  const isBottom = (window.scrollY + window.innerHeight) === document.scrollingElement.scrollHeight
+  const isBottom = (window.scrollY + window.innerHeight) === document.scrollingElement.scrollHeight;
 
   if (isTop) {
     return elements[0];
@@ -11,15 +12,26 @@ export default function getClosestToViewportCenter (elements) {
     return elements.slice(-1)[0];
   }
 
-  elements.forEach((el, index) => {
+  const offsets = elements.reduce((offsets, el, index) => {
     const rect = el.getBoundingClientRect();
-    const elTop = Math.abs(rect.top);
-    const elMiddle = Math.abs(rect.height / 2)
-    const distance = Math.abs(midY - (window.scrollY + elTop + elMiddle));
-    offsets[distance] = index;
-  });
+    const elTop = Math.abs(window.scrollY + rect.top);
+    let elOffset;
 
-  const index = Object.keys(offsets).sort()[0];
+    if (isCenterOffset) elOffset = Math.abs(rect.height / 2);
+    if (!offset) elOffset = rect.height;
+
+    const distance = Math.abs(midY - (elTop + elOffset));
+    offsets[distance] = index;
+
+    if (elOffset === rect.height) {
+      const topDistance = Math.abs(midY - elTop);
+      offsets[topDistance] = index;
+    }
+
+    return offsets;
+  }, {});
+
+  const index = Object.keys(offsets).sort((a, b) => parseFloat(a) - parseFloat(b))[0];
   const elIndex = offsets[index];
 
   return elements[elIndex];
