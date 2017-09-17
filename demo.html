@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style>
+    body {
+      margin: 1em;
+      padding: 0;
+    }
+
+    body:after {
+      content: ' ';
+      position: fixed;
+      top: 50vh;
+      right: 0;
+      left: 0;
+      border-bottom: 2px dashed hsla(0, 0%, 0%, 0.15);
+    }
+
+    section {
+      display: block;
+      height: 50vh;
+      margin-bottom: 0.5em;
+      background-color: #FEFEFE;
+      color: #FEFEFE;
+      font: 2em/50vh -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+    }
+
+    section:nth-child(1) {
+      color: #9A468C;
+      background-color: #F8E2E2;
+    }
+
+    section:nth-child(2) {
+      color: #46739A;
+      background-color: #ECF2E9;
+    }
+
+    section:nth-child(3) {
+      color: #469962;
+      background-color: #E8F2F0;
+    }
+
+    section:nth-child(4) {
+      color: #9A4847;
+      background-color: #F2EDE8;
+    }
+
+  </style>
+</head>
+<body>
+  <section id="1">1</section>
+  <section id="2">2</section>
+  <section id="3">3</section>
+  <section id="4">4</section>
+
+  <script src="/dist/closest-to-viewport-center.js"></script>
+  <script>
+    var elements = [].slice.call(document.querySelectorAll('section'));
+
+    function getClosestEl() {
+      window.closestEl = window.closestToViewportCenter(elements);
+      elements.forEach(el => el.style.backgroundColor = '');
+      window.closestEl.style.backgroundColor = '#FFFFFF';
+    }
+
+    getClosestEl();
+    window.addEventListener('scroll', getClosestEl);
+  </script>
+</body>
+</html>
