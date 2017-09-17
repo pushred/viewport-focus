@@ -58,8 +58,12 @@
 
   <script src="/dist/closest-to-viewport-middle.js"></script>
   <script>
-    var elements = [].slice.call(document.querySelectorAll('section'));
+    var isNodeList = Boolean(window.location.search.split('nodelist=')[1]);
     var offset = window.location.search.split('offset=')[1];
+
+    var elements = isNodeList
+      ? document.querySelectorAll('section')
+      : [].slice.call(document.querySelectorAll('section'));
 
     function getClosestEl() {
       window.closestEl = window.closestToViewportMiddle(elements, offset);
