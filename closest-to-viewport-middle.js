@@ -1,4 +1,6 @@
 export default function closestToViewportMiddle (elements, offset) {
+  if (elements instanceof NodeList) elements = [].slice.call(elements);
+
   const isMiddleOffset = offset && /center|middle/.test(offset);
 
   const midY = window.scrollY + (window.innerHeight / 2);
