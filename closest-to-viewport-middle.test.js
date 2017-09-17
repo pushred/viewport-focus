@@ -35,7 +35,7 @@ test('last element is returned when at bottom of viewport', () => {
     .then(closestEl => expect(closestEl).not.toBeNull() && expect(closestEl.id).toEqual('4'));
 });
 
-test('element passing under the viewport center is returned', () => {
+test('element passing under the viewport middle is returned', () => {
   return Nightmare()
     .goto(DEMO_URL)
     .viewport(W, H)
@@ -45,7 +45,7 @@ test('element passing under the viewport center is returned', () => {
     .then(closestEl => expect(closestEl).not.toBeNull() && expect(closestEl.id).toEqual('2'));
 });
 
-test('element target can be offset to middle', () => {
+test('trigger can be offset to element middle', () => {
   return Nightmare()
     .goto(DEMO_URL + '?offset=middle')
     .viewport(W, H)

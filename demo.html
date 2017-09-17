@@ -56,13 +56,13 @@
   <section id="3">3</section>
   <section id="4">4</section>
 
-  <script src="/dist/closest-to-viewport-center.js"></script>
+  <script src="/dist/closest-to-viewport-middle.js"></script>
   <script>
     var elements = [].slice.call(document.querySelectorAll('section'));
     var offset = window.location.search.split('offset=')[1];
 
     function getClosestEl() {
-      window.closestEl = window.closestToViewportCenter(elements, offset);
+      window.closestEl = window.closestToViewportMiddle(elements, offset);
       elements.forEach(el => el.style.backgroundColor = '');
       window.closestEl.style.backgroundColor = '#FFFFFF';
     }

@@ -1,5 +1,5 @@
-export default function getClosestToViewportCenter (elements, offset) {
-  const isCenterOffset = offset && /center|middle/.test(offset);
+export default function closestToViewportMiddle (elements, offset) {
+  const isMiddleOffset = offset && /center|middle/.test(offset);
 
   const midY = window.scrollY + (window.innerHeight / 2);
 
@@ -17,7 +17,7 @@ export default function getClosestToViewportCenter (elements, offset) {
     const elTop = Math.abs(window.scrollY + rect.top);
     let elOffset;
 
-    if (isCenterOffset) elOffset = Math.abs(rect.height / 2);
+    if (isMiddleOffset) elOffset = Math.abs(rect.height / 2);
     if (!offset) elOffset = rect.height;
 
     const distance = Math.abs(midY - (elTop + elOffset));
