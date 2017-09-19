@@ -1,15 +1,26 @@
 const PREFIX = 'viewport-focus:';
 
 /**
+ * Viewport focal point presets
+ * @typedef {(top|quarter|middle)} FocalPoint
+ */
+
+/**
  * getViewportFocus
  * Returns the element closest to the middle of the browser viewport
  *
  * @param {Array|NodeList} elements
- * @param {String} [offset] - shift trigger to middle of element if set to 'middle'
+ * @param {Object} options
+ * @param {FocalPoint|Number} [options.focalPoint] - point within viewport that elements are compared against; defaults to 'middle'
+ * @param {String} [options.offset] - shift trigger to middle of element if set to 'middle'
  * @returns {HTMLElement} - closest element
  */
 
-export default function getViewportFocus (elements, offset) {
+export default function getViewportFocus (elements, options) {
+  if (typeof options !== 'object') return console.error(PREFIX, 'options must be specified as an object');
+
+  const { focalPoint = 'middle', offset } = options;
+
   if (!elements && !Array.isArray(elements) && !(elements instanceof NodeList)) {
     return console.error(PREFIX, 'Array or NodeList of HTML elements required');
   }
@@ -19,7 +30,15 @@ export default function getViewportFocus (elements, offset) {
   const isMiddleOffset = offset && /center|middle/.test(offset);
   if (offset && !isMiddleOffset) console.warn(PREFIX, 'only "middle" offset is supported');
 
-  const midY = window.scrollY + (window.innerHeight / 2);
+  // focalPoint presets
+
+  let focalPointY = !/top|quarter|middle/i.test(focalPoint) && (window.scrollY + parseInt(focalPoint, 10));
+  if (focalPoint === 'top') focalPointY = window.scrollY;
+  if (focalPoint === 'quarter') focalPointY = window.scrollY + (window.innerHeight / 4);
+  if (focalPoint === 'middle') focalPointY = window.scrollY + (window.innerHeight / 2);
+  if (typeof focalPointY !== 'number') return console.error(PREFIX, 'focalPoint must be a pixel value, or one of: top, quarter, middle');
+
+  // auto-select first/last elements at top and bottom of viewport, where they may not reach the focal point
 
   const isTop = window.scrollY === 0;
   const isBottom = (window.scrollY + window.innerHeight) === document.scrollingElement.scrollHeight;
@@ -30,6 +49,8 @@ export default function getViewportFocus (elements, offset) {
     return elements.slice(-1)[0];
   }
 
+  // determine element closest to focal point (with any offset applied)
+
   const offsets = elements.reduce((offsets, el, index) => {
     const rect = el.getBoundingClientRect();
     const elTop = Math.abs(window.scrollY + rect.top);
@@ -38,11 +59,11 @@ export default function getViewportFocus (elements, offset) {
       ? Math.abs(rect.height / 2)
       : rect.height;
 
-    const distance = Math.abs(midY - (elTop + elOffset));
+    const distance = Math.abs(focalPointY - (elTop + elOffset));
     offsets[distance] = index;
 
     if (elOffset === rect.height) {
-      const topDistance = Math.abs(midY - elTop);
+      const topDistance = Math.abs(focalPointY - elTop);
       offsets[topDistance] = index;
     }
 

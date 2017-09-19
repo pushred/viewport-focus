@@ -56,17 +56,18 @@
   <section id="3">3</section>
   <section id="4">4</section>
 
+  <script src="https://unpkg.com/qs@6.5.1/dist/qs.js"></script>
   <script src="/dist/viewport-focus.js"></script>
   <script>
-    var isNodeList = Boolean(window.location.search.split('nodelist=')[1]);
-    var offset = window.location.search.split('offset=')[1];
+    var params = Qs.parse(window.location.search.split('?')[1]);
+    var isNodeList = Boolean(params.nodeList);
 
     var elements = isNodeList
       ? document.querySelectorAll('section')
       : [].slice.call(document.querySelectorAll('section'));
 
     function getClosestEl() {
-      window.closestEl = window.viewportFocus(elements, offset);
+      window.closestEl = window.viewportFocus(elements, params);
       elements.forEach(el => el.style.backgroundColor = '');
       window.closestEl.style.backgroundColor = '#FFFFFF';
     }

@@ -17,18 +17,39 @@
     value: true
   });
   exports.default = getViewportFocus;
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  };
+
   var PREFIX = 'viewport-focus:';
+
+  /**
+   * Viewport focal point presets
+   * @typedef {(top|quarter|middle)} FocalPoint
+   */
 
   /**
    * getViewportFocus
    * Returns the element closest to the middle of the browser viewport
    *
    * @param {Array|NodeList} elements
-   * @param {String} [offset] - shift trigger to middle of element if set to 'middle'
+   * @param {Object} options
+   * @param {FocalPoint|Number} [options.focalPoint] - point within viewport that elements are compared against; defaults to 'middle'
+   * @param {String} [options.offset] - shift trigger to middle of element if set to 'middle'
    * @returns {HTMLElement} - closest element
    */
 
-  function getViewportFocus(elements, offset) {
+  function getViewportFocus(elements, options) {
+    if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) !== 'object') return console.error(PREFIX, 'options must be specified as an object');
+
+    var _options$focalPoint = options.focalPoint,
+        focalPoint = _options$focalPoint === undefined ? 'middle' : _options$focalPoint,
+        offset = options.offset;
+
+
     if (!elements && !Array.isArray(elements) && !(elements instanceof NodeList)) {
       return console.error(PREFIX, 'Array or NodeList of HTML elements required');
     }
@@ -38,7 +59,15 @@
     var isMiddleOffset = offset && /center|middle/.test(offset);
     if (offset && !isMiddleOffset) console.warn(PREFIX, 'only "middle" offset is supported');
 
-    var midY = window.scrollY + window.innerHeight / 2;
+    // focalPoint presets
+
+    var focalPointY = !/top|quarter|middle/i.test(focalPoint) && window.scrollY + parseInt(focalPoint, 10);
+    if (focalPoint === 'top') focalPointY = window.scrollY;
+    if (focalPoint === 'quarter') focalPointY = window.scrollY + window.innerHeight / 4;
+    if (focalPoint === 'middle') focalPointY = window.scrollY + window.innerHeight / 2;
+    if (typeof focalPointY !== 'number') return console.error(PREFIX, 'focalPoint must be a pixel value, or one of: top, quarter, middle');
+
+    // auto-select first/last elements at top and bottom of viewport, where they may not reach the focal point
 
     var isTop = window.scrollY === 0;
     var isBottom = window.scrollY + window.innerHeight === document.scrollingElement.scrollHeight;
@@ -49,17 +78,19 @@
       return elements.slice(-1)[0];
     }
 
+    // determine element closest to focal point (with any offset applied)
+
     var offsets = elements.reduce(function (offsets, el, index) {
       var rect = el.getBoundingClientRect();
       var elTop = Math.abs(window.scrollY + rect.top);
 
       var elOffset = isMiddleOffset ? Math.abs(rect.height / 2) : rect.height;
 
-      var distance = Math.abs(midY - (elTop + elOffset));
+      var distance = Math.abs(focalPointY - (elTop + elOffset));
       offsets[distance] = index;
 
       if (elOffset === rect.height) {
-        var topDistance = Math.abs(midY - elTop);
+        var topDistance = Math.abs(focalPointY - elTop);
         offsets[topDistance] = index;
       }
 
