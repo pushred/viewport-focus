@@ -15,15 +15,6 @@
     "pretest": "yarn run build",
     "test": "run-p demo jest --race"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ],
-    "plugins": [
-      "add-module-exports",
-      "transform-es2015-modules-umd"
-    ]
-  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
