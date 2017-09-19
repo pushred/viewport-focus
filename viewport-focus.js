@@ -1,7 +1,7 @@
-const PREFIX = 'closest-to-viewport-middle:';
+const PREFIX = 'viewport-focus:';
 
 /**
- * closestToViewportMiddle
+ * getViewportFocus
  * Returns the element closest to the middle of the browser viewport
  *
  * @param {Array|NodeList} elements
@@ -9,7 +9,7 @@ const PREFIX = 'closest-to-viewport-middle:';
  * @returns {HTMLElement} - closest element
  */
 
-export default function closestToViewportMiddle (elements, offset) {
+export default function getViewportFocus (elements, offset) {
   if (!elements && !Array.isArray(elements) && !(elements instanceof NodeList)) {
     return console.error(PREFIX, 'Array or NodeList of HTML elements required');
   }

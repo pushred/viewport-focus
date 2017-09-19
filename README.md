@@ -1,9 +1,9 @@
-closest-to-viewport-middle
-==========================
+viewport-focus
+==============
 
-> Given a list of DOM elements, return the one closest to the middle of the browser viewport
+> Given a list of DOM elements, return the one closest to the focal point of the browser viewport
 
-[Demo](https://pushred.github.io/closest-to-viewport-middle/demo.html)
+[Demo](https://pushred.github.io/viewport-focus/demo.html)
 
 Table of Contents
 -----------------
@@ -18,8 +18,8 @@ Install
 -------
 
 ```sh
-npm install closest-to-viewport-middle --save
-yarn add closest-to-viewport-middle
+npm install viewport-focus --save
+yarn add viewport-focus
 ```
 
 Install a [document.scrollingElement][] polyfill for [older browser support][support]
@@ -29,19 +29,19 @@ Usage
 
 ```javascript
 <script src="//unpkg.com/underscore@1.8.3/underscore.js"></script>
-<script src="//unpkg.com/closest-to-viewport-middle/dist/closest-to-viewport-middle.js"></script>
+<script src="//unpkg.com/viewport-focus/dist/viewport-focus.js"></script>
 <script>
-  var closestToMiddle = window.closestToViewportMiddle;
+  var getViewportFocus = window.viewportFocus;
   var elements = document.querySelectorAll('section');
   // jQuery: var elements = $('section')[0];
 
-  function getClosestEl() {
-    var closestEl = closestToMiddle(elements);
+  function setClosestEl() {
+    var closestEl = getViewportFocus(elements);
     // closestEl is at your command
   }
 
-  getClosestEl();
-  window.addEventListener('scroll', _.throttle(getClosestEl, 100));
+  setClosestEl();
+  window.addEventListener('scroll', _.throttle(setClosestEl, 100));
 </script>
 });
 ```
@@ -50,18 +50,18 @@ Usage
 
 ```javascript
 import throttle from 'lodash/throttle';
-import closestToMiddle from 'closest-to-viewport-middle';
+import getViewportFocus from 'viewport-focus';
 
 document.addEventListener('DOMContentLoaded', () => {
   const elements = document.querySelectorAll('section');
 
-  function getClosestEl() {
-    const closestEl = closestToMiddle(elements);
+  function setClosestEl() {
+    const closestEl = getViewportFocus(elements);
     // closestEl is at your command
   }
 
-  getClosestEl();
-  window.addEventListener('scroll', throttle(getClosestEl, 100));
+  setClosestEl();
+  window.addEventListener('scroll', throttle(setClosestEl, 100));
 });
 ```
 
