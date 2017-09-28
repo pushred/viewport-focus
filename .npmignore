@@ -1,1 +1,4 @@
 .babelrc
+*.test.js
+yarn.lock
+
