@@ -2,6 +2,10 @@
   "name": "viewport-focus",
   "description": "Given a list of DOM elements, return the one closest to the focal point of the browser viewport",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pushred/viewport-focus.git"
+  },
   "author": "Eric Lanehart <eric@pushred.co> (http://pushred.co)",
   "license": "ISC",
   "main": "dist/viewport-focus.js",
