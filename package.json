@@ -6,6 +6,7 @@
   "license": "ISC",
   "main": "dist/viewport-focus.js",
   "module": "viewport-focus.js",
+  "browser": "dist/viewport-focus.js",
   "scripts": {
     "build": "babel ./viewport-focus.js -d dist",
     "build:watch": "chokidar './viewport-focus.js' -c 'yarn run build'",
