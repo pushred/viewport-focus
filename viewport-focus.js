@@ -19,12 +19,19 @@ const PREFIX = 'viewport-focus:';
 export default function getViewportFocus (elements, options) {
   if (typeof options !== 'object') return console.error(PREFIX, 'options must be specified as an object');
 
+  // stop if required DOM interfaces are missing
+  if (window === undefined || window.scrollY === undefined || window.innerHeight === undefined) return;
+  if (document === window || !document.scrollingElement) return;
+
   const { focalPoint = 'middle', offset } = options;
 
-  if (!elements && !Array.isArray(elements) && !(elements instanceof NodeList)) {
-    return console.error(PREFIX, 'Array or NodeList of HTML elements required');
-  }
+  const hasElements = (
+    elements !== undefined
+    && (Array.isArray(elements) || elements instanceof NodeList)
+    && elements.length
+  );
 
+  if (!hasElements) return console.error(PREFIX, 'Array or NodeList of HTML elements required');
   if (elements instanceof NodeList) elements = [].slice.call(elements);
 
   const isMiddleOffset = offset && /center|middle/.test(offset);
